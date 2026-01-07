@@ -43,4 +43,42 @@ WHERE TRY_TO_DATE(LEFT(h.OrderDate, 10)) IS NOT NULL;
 -- Final Verification
 SELECT 'FACT_SALES', COUNT(*) FROM FACT_SALES
 UNION ALL
+
 SELECT 'DIM_PRODUCT', COUNT(*) FROM DIM_PRODUCT;
+
+
+
+/* QA CHECK 1: Referential Integrity */
+SELECT COUNT(*) AS Orphan_Records
+FROM ADVENTUREWORKS_ANALYTICS.PUBLIC.FACT_SALES f
+LEFT JOIN ADVENTUREWORKS_ANALYTICS.PUBLIC.DIM_PRODUCT p 
+    ON f.ProductID = p.ProductID
+WHERE p.ProductID IS NULL;
+
+/* QA CHECK 2: Date Range Validity */
+SELECT 
+    MIN(OrderDate) AS First_Sale,
+    MAX(OrderDate) AS Last_Sale,
+    COUNT(*) AS Total_Rows
+FROM ADVENTUREWORKS_ANALYTICS.PUBLIC.FACT_SALES;
+
+/* QA CHECK 3: Total Revenue Sanity Check */
+SELECT 
+    SUM(LineTotal) AS Total_Revenue_Excl_Tax,
+    SUM(TotalDue) AS Total_Revenue_Incl_Tax
+FROM ADVENTUREWORKS_ANALYTICS.PUBLIC.FACT_SALES;
+
+/* QA CHECK 4: Sales Person Data Quality */
+SELECT * FROM ADVENTUREWORKS_ANALYTICS.PUBLIC.DIM_SALESPERSON LIMIT 10;
+
+/* QA CHECK 5: Top Sales Agents (Integration Test) */
+SELECT 
+    sp.SalesPersonName,
+    COUNT(f.SalesOrderID) AS Total_Orders,
+    SUM(f.LineTotal) AS Total_Revenue
+FROM ADVENTUREWORKS_ANALYTICS.PUBLIC.DIM_SALESPERSON sp
+JOIN ADVENTUREWORKS_ANALYTICS.PUBLIC.FACT_SALES f 
+    ON sp.SalesPersonID = f.SalesPersonID
+GROUP BY sp.SalesPersonName
+ORDER BY Total_Revenue DESC
+LIMIT 5;
