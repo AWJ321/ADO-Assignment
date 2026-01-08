@@ -25,11 +25,11 @@ cs = ctx.cursor()  # Initialize the cursor
 cs.execute("USE ROLE CI_CD_ROLE;")  # Explicitly switch to the role
 
 sql_files = [
-    "00_Setup_and_Automation.sql",
     "01_Raw_Ingestion.sql",
     "02_Dims_Customer_SalesPerson.sql",
     "03_Dims_Product_Location.sql",
-    "04_Fact_Sales.sql"
+    "04_Fact_Sales.sql",
+    "05_Automation.sql"
 ]
 
 
