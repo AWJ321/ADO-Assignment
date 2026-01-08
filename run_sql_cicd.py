@@ -40,9 +40,13 @@ for file in sql_files:
         # Split the file into statements using semicolon
         statements = [s.strip() for s in sql.split(';') if s.strip()]
         for stmt in statements:
-            print(f"Executing: {stmt}")
-            cs.execute(stmt)
-
+            print(f"Executing SQL statement: {stmt}")  # Add this for debugging
+            try:
+                cs.execute(stmt)
+            except Exception as e:
+                print(f"Failed to execute: {stmt}")
+                print(f"Error: {e}")  # Print the error for debugging
+                raise
 
 cs.close()
 ctx.close()
