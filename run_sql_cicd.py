@@ -19,7 +19,10 @@ ctx = snowflake.connector.connect(
     schema=schema
 )
 
-ctx.cursor().execute("USE ROLE CI_CD_ROLE;")  # Explicitly switch to the role
+# cs =  ctx.cursor().execute("USE ROLE CI_CD_ROLE;")  # Explicitly switch to the role
+
+cs = ctx.cursor()  # Initialize the cursor
+cs.execute("USE ROLE CI_CD_ROLE;")  # Explicitly switch to the role
 
 sql_files = [
     "00_Setup_and_Automation.sql",
