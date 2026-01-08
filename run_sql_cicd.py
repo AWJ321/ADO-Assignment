@@ -22,11 +22,11 @@ ctx = snowflake.connector.connect(
 cs = ctx.cursor()
 
 sql_files = [
-    "00_Setup_and_Automation.sql",
     "01_Raw_Ingestion.sql",
     "02_Dims_Customer_SalesPerson.sql",
     "03_Dims_Product_Location.sql",
-    "04_Fact_Sales.sql"
+    "04_Fact_Sales.sql",
+    "00_Setup_and_Automation.sql"
 ]
 
 for file in sql_files:
