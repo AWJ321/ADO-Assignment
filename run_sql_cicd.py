@@ -40,6 +40,7 @@ for file in sql_files:
         # Split the file into statements using semicolon
         statements = [s.strip() for s in sql.split(';') if s.strip()]
         for stmt in statements:
+            print(f"Executing: {stmt}")
             cs.execute(stmt)
 
 
