@@ -1,0 +1,48 @@
+name: Snowflake CI/CD with RBAC
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  snowflake-ci-rbac:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install SnowSQL
+        run: |
+          curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-1.2.24-linux_x86_64.bash
+          bash snowsql-1.2.24-linux_x86_64.bash
+
+      - name: Run SQL Files with CI/CD Role
+        env:
+          # SNOWSQL_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          # SNOWSQL_USER: ${{ secrets.SNOWFLAKE_CICD_USER }}
+          # SNOWSQL_PASSWORD: ${{ secrets.SNOWFLAKE_CICD_PASSWORD }}
+          # SNOWSQL_ROLE: CI_CD_ROLE
+          # SNOWSQL_WAREHOUSE: DATAOPS_WH
+          # SNOWSQL_DATABASE: ADVENTUREWORKS_RAW
+          # SNOWSQL_SCHEMA: PUBLIC
+
+          #To be deleted later [for test]
+          SNOWSQL_ACCOUNT: "VV03819"          # e.g., xy12345.ap-southeast-1
+          SNOWSQL_USER: "TRANVY"
+          SNOWSQL_PASSWORD: "Mynameisvy170907%"             # <- hardcoded password for testing
+          SNOWSQL_ROLE: "CI_CD_ROLE"
+          SNOWSQL_WAREHOUSE: "DATAOPS_WH"
+          SNOWSQL_DATABASE: "ADVENTUREWORKS_RAW"
+          SNOWSQL_SCHEMA: "PUBLIC"
+          
+        run: |
+          echo "Running CI/CD pipeline as $SNOWSQL_USER with role $SNOWSQL_ROLE"
+
+          
+          snowsql -a $SNOWSQL_ACCOUNT -u $SNOWSQL_USER -p $SNOWSQL_PASSWORD -r $SNOWSQL_ROLE -w $SNOWSQL_WAREHOUSE -d ADVENTUREWORKS_ANALYTICS -s PUBLIC -f 00_Setup_and_Automation.sql
+          snowsql -a $SNOWSQL_ACCOUNT -u $SNOWSQL_USER -p $SNOWSQL_PASSWORD -r $SNOWSQL_ROLE -w $SNOWSQL_WAREHOUSE -d $SNOWSQL_DATABASE -s $SNOWSQL_SCHEMA -f 01_Raw_Ingestion.sql
+          snowsql -a $SNOWSQL_ACCOUNT -u $SNOWSQL_USER -p $SNOWSQL_PASSWORD -r $SNOWSQL_ROLE -w $SNOWSQL_WAREHOUSE -d $SNOWSQL_DATABASE -s $SNOWSQL_SCHEMA -f 02_Dims_Customer_SalesPerson.sql
+          snowsql -a $SNOWSQL_ACCOUNT -u $SNOWSQL_USER -p $SNOWSQL_PASSWORD -r $SNOWSQL_ROLE -w $SNOWSQL_WAREHOUSE -d $SNOWSQL_DATABASE -s $SNOWSQL_SCHEMA -f 03_Dims_Product_Location.sql
+          snowsql -a $SNOWSQL_ACCOUNT -u $SNOWSQL_USER -p $SNOWSQL_PASSWORD -r $SNOWSQL_ROLE -w $SNOWSQL_WAREHOUSE -d ADVENTUREWORKS_ANALYTICS -s PUBLIC -f 04_Fact_Sales.sql
