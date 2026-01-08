@@ -13,12 +13,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install SnowSQL
+      - name: Install SnowSQL via pip
         run: |
-          curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-1.2.24-linux_x86_64.bash
-          chmod +x snowsql-1.2.24-linux_x86_64.bash
-          ./snowsql-1.2.24-linux_x86_64.bash --accept-license --yes
-          snowsql -v
+          python3 -m pip install --upgrade pip
+          pip install snowflake-connector-python
+          pip install snowflake-sqlalchemy
 
       - name: Run SQL Files with CI/CD Role
         env:
