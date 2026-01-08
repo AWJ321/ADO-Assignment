@@ -29,13 +29,13 @@ jobs:
           # SNOWFLAKE_SCHEMA: PUBLIC
 
           #To be deleted later [for test]
-          SNOWSQL_ACCOUNT: "ktkddtf-by19054"         
-          SNOWSQL_USER: "TRANVY"
-          SNOWSQL_PASSWORD: "Mynameisvy170907%"             
-          SNOWSQL_ROLE: "CI_CD_ROLE"
-          SNOWSQL_WAREHOUSE: "DATAOPS_WH"
-          SNOWSQL_DATABASE: "ADVENTUREWORKS_RAW"
-          SNOWSQL_SCHEMA: "PUBLIC"
+          SNOWFLAKE_ACCOUNT: "ktkddtf-by19054"
+          SNOWFLAKE_CICD_USER: "TRANVY"
+          SNOWFLAKE_CICD_PASSWORD: "Mynameisvy170907%"
+          SNOWFLAKE_ROLE: "CI_CD_ROLE"
+          SNOWFLAKE_WAREHOUSE: "DATAOPS_WH"
+          SNOWFLAKE_DATABASE: "ADVENTUREWORKS_RAW"
+          SNOWFLAKE_SCHEMA: "PUBLIC"
           
         run: |
           python run_sql_cicd.py
