@@ -32,7 +32,7 @@ BEGIN
         COALESCE(c.Name, 'Uncategorized') AS Category,
         p.ProductLine,
         p.Class,
-        p.Style,
+        -- p.Style,
         TRY_TO_DATE(LEFT(p.SellStartDate, 10)) AS SellStartDate,
         CASE WHEN p.SellEndDate IS NULL THEN 'Active' ELSE 'Discontinued' END AS ProductStatus
     FROM ADVENTUREWORKS_RAW.PUBLIC.RAW_PRODUCT p
