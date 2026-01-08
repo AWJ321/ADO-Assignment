@@ -29,7 +29,7 @@ jobs:
           # SNOWFLAKE_SCHEMA: PUBLIC
 
           #To be deleted later [for test]
-          SNOWSQL_ACCOUNT: "VV03819"         
+          SNOWSQL_ACCOUNT: "ktkddtf-by19054"         
           SNOWSQL_USER: "TRANVY"
           SNOWSQL_PASSWORD: "Mynameisvy170907%"             
           SNOWSQL_ROLE: "CI_CD_ROLE"
