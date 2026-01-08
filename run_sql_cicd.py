@@ -86,6 +86,44 @@ sql_files = [
     "05_Automation.sql"
 ]
 
+def smart_split_sql(sql_content):
+    """
+    Split SQL statements while preserving BEGIN...END blocks
+    """
+    statements = []
+    current_stmt = []
+    in_begin_end = 0  # Counter for nested BEGIN...END
+    
+    lines = sql_content.split('\n')
+    
+    for line in lines:
+        stripped_upper = line.strip().upper()
+        
+        # Check for BEGIN keyword (start of block)
+        if 'BEGIN' in stripped_upper and not stripped_upper.startswith('--'):
+            in_begin_end += 1
+        
+        # Check for END keyword (end of block)
+        if stripped_upper.startswith('END;') or stripped_upper == 'END':
+            in_begin_end -= 1
+        
+        current_stmt.append(line)
+        
+        # Only split on semicolon if we're NOT inside a BEGIN...END block
+        if ';' in line and in_begin_end == 0:
+            stmt = '\n'.join(current_stmt).strip()
+            if stmt and not stmt.startswith('/*') and not stmt.startswith('--'):
+                statements.append(stmt)
+            current_stmt = []
+    
+    # Add any remaining statement
+    if current_stmt:
+        stmt = '\n'.join(current_stmt).strip()
+        if stmt and not stmt.startswith('/*') and not stmt.startswith('--'):
+            statements.append(stmt)
+    
+    return statements
+
 for file in sql_files:
     print(f"\n{'='*60}")
     print(f"Running {file}...")
@@ -94,16 +132,25 @@ for file in sql_files:
     with open(file, 'r') as f:
         sql_content = f.read()
     
-    try:
-        # Use execute_string to handle multi-statement SQL properly
-        # This preserves BEGIN...END blocks in tasks
-        for result in cs.execute_string(sql_content):
-            print(f"✓ Statement executed successfully")
-        print(f"✓ {file} completed successfully\n")
-    except Exception as e:
-        print(f"✗ Failed to execute {file}")
-        print(f"Error: {e}")
-        raise
+    # Use smart splitter to preserve BEGIN...END blocks
+    statements = smart_split_sql(sql_content)
+    
+    for stmt in statements:
+        stmt = stmt.strip().rstrip(';')
+        if stmt:
+            # Show first 150 chars for debugging
+            preview = stmt[:150].replace('\n', ' ')
+            print(f"Executing: {preview}...")
+            try:
+                cs.execute(stmt)
+                print("✓ Success")
+            except Exception as e:
+                print(f"✗ Failed to execute statement")
+                print(f"Error: {e}")
+                print(f"Statement preview: {stmt[:500]}")
+                raise
+    
+    print(f"✓ {file} completed successfully")
 
 cs.close()
 ctx.close()
