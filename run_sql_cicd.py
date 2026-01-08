@@ -22,18 +22,23 @@ ctx = snowflake.connector.connect(
 cs = ctx.cursor()
 
 sql_files = [
+    "00_Setup_and_Automation.sql",
     "01_Raw_Ingestion.sql",
     "02_Dims_Customer_SalesPerson.sql",
     "03_Dims_Product_Location.sql",
-    "04_Fact_Sales.sql",
-    "00_Setup_and_Automation.sql"
+    "04_Fact_Sales.sql"
 ]
+
 
 for file in sql_files:
     print(f"Running {file}...")
     with open(file, 'r') as f:
         sql = f.read()
-        cs.execute(sql)
+        # Split the file into statements using semicolon
+        statements = [s.strip() for s in sql.split(';') if s.strip()]
+        for stmt in statements:
+            cs.execute(stmt)
+
 
 cs.close()
 ctx.close()
