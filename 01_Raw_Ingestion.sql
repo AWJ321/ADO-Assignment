@@ -1,5 +1,10 @@
 -- 1. Create a File Format object
 -- This acts as a template for reading our specific CSV structure.
+USE DATABASE ADVENTUREWORKS_RAW;
+USE SCHEMA PUBLIC;
+USE WAREHOUSE DATAOPS_WH; 
+
+
 CREATE OR REPLACE FILE FORMAT CSV_FORMAT
   TYPE = 'CSV'
   FIELD_DELIMITER = ','           -- Columns are separated by commas
@@ -316,4 +321,5 @@ SELECT 'Product', COUNT(*) FROM RAW_PRODUCT
 UNION ALL
 SELECT 'Customer', COUNT(*) FROM RAW_CUSTOMER
 UNION ALL
+
 SELECT 'SpecialOfferProduct', COUNT(*) FROM RAW_SPECIALOFFERPRODUCT;
