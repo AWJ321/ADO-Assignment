@@ -20,22 +20,14 @@ jobs:
 
       - name: Run SQL files with CI/CD Role
         env:
-          # SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-          # SNOWFLAKE_CICD_USER: ${{ secrets.SNOWFLAKE_CICD_USER }}
-          # SNOWFLAKE_CICD_PASSWORD: ${{ secrets.SNOWFLAKE_CICD_PASSWORD }}
-          # SNOWFLAKE_ROLE: CI_CD_ROLE
-          # SNOWFLAKE_WAREHOUSE: DATAOPS_WH
-          # SNOWFLAKE_DATABASE: ADVENTUREWORKS_RAW
-          # SNOWFLAKE_SCHEMA: PUBLIC
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_CICD_USER: ${{ secrets.SNOWFLAKE_CICD_USER }}
+          SNOWFLAKE_CICD_PASSWORD: ${{ secrets.SNOWFLAKE_CICD_PASSWORD }}
+          SNOWFLAKE_ROLE: CI_CD_ROLE
+          SNOWFLAKE_WAREHOUSE: DATAOPS_WH
+          SNOWFLAKE_DATABASE: ADVENTUREWORKS_RAW
+          SNOWFLAKE_SCHEMA: PUBLIC
 
-          #To be deleted later [for test]
-          SNOWFLAKE_ACCOUNT: "ktkddtf-by19054"
-          SNOWFLAKE_CICD_USER: "TRANVY"
-          SNOWFLAKE_CICD_PASSWORD: "Mynameisvy170907%"
-          SNOWFLAKE_ROLE: "CI_CD_ROLE"
-          SNOWFLAKE_WAREHOUSE: "DATAOPS_WH"
-          SNOWFLAKE_DATABASE: "ADVENTUREWORKS_RAW"
-          SNOWFLAKE_SCHEMA: "PUBLIC"
           
         run: |
           python run_sql_cicd.py
